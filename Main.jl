@@ -19,8 +19,7 @@ function solvestoke(parameter)
     #Finden der inneren Knoten, des Displacment teils
     inner_node=Int64[]
     for j = 1:(data.n_nd)
-
-        if(parameter.boundary*data.n_boundary[j,:]==[0])
+        if(data.n_boundary[j,2]==0&&data.n_boundary[j,4]==0)
 
             push!(inner_node,j)
 
@@ -30,7 +29,7 @@ function solvestoke(parameter)
     #Finden der inneren Knoten, des Druck teils
     for j = 1:data.n_corner
 
-        if(parameter.boundary*data.c_boundary[j,:]==[0])
+        if(data.c_boundary[j,2]==0&&data.c_boundary[j,4]==0)
 
             push!(inner_node,j+(data.n_nd))
 
@@ -40,12 +39,14 @@ function solvestoke(parameter)
 
     #Lösen des Gleichungsystems auf den inneren Knoten und ploten des Ergebnisses
 
-    uu[inner_node] = K[inner_node,inner_node]\FF[inner_node]
-
-    
-    #TODO verschiebung der punkte
+    #uu[inner_node] = K[inner_node,inner_node]\FF[inner_node]
+    uu=K\FF
     u=uu[1:data.n_nd]
     p=uu[data.n_nd+1:end]
-
+    #die Punkte des Grids verschieben
+    data.x_node[1:2:end,1]+=u[1:2:end]
+    data.x_node[2:2:end,1]+=u[1:2:end]
+    data.x_node[1:2:end,2]+=u[2:2:end]
+    data.x_node[2:2:end,2]+=u[2:2:end]
 
 end

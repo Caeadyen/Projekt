@@ -26,8 +26,9 @@ function assemble_element(i,data,parameter)
     B[3,indexu]=dN[2,:]
 
     Kvve += w1*w2*J*((B'*D)*B)*parameter.my
-    #TODO F ausrechen
-    #Fk += (w1*w2*J)*[1 0]#(mesh.n_boundary[quad].*((w1*w2*hx*hy*t)*NN)')'
+    #F berechnen und für links und rechts das drücken draufrechnen
+    #TODO f,t in parameter struct
+    Fk += ((w1*w2*J)*[0 0]*NN) + (data.n_boundary[quad,:]*parameter.boundary' .*((w1*w2*J*[1 0])*NN)')'
 
   end
 

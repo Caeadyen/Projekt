@@ -10,8 +10,8 @@ function builddata(n1,n2)
   n_el = n1*n2
   n_nd = ((2*n1)+1)*((2*n2)+1)*2
   n_corner = (n1+1)*(n2+1)
-  n_boundary = zeros(Int,2*n_nd,4)
-  x_node = zeros(Float64,2*n_nd,2)
+  n_boundary = zeros(Int,n_nd,4)
+  x_node = zeros(Float64,n_nd,2)
   c_boundary = zeros(Int,n_corner,4)
   x_corner = zeros(Float64,n_corner,2)
   square = zeros(Int,n_el,18)
