@@ -123,7 +123,7 @@ for j = 1:n2
 end
 #u = zeros(2*data.n_nd)
 #  p = zeros(data.n_corner)
-data = Data(dim, n_el, n_nd, n_corner, x_node, square, n_boundary, x_corner, corner, c_boundary,zeros(2*n_nd),zeros(n_corner))
+data = Data(dim, n_el, n_nd, n_corner, x_node, square, n_boundary, x_corner, corner, c_boundary,zeros(n_nd),zeros(n_corner))
 return data
 end
 

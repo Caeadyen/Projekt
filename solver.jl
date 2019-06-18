@@ -25,7 +25,7 @@ function assemble_element(i,data,parameter)
     B[1,indexu]=dN[1,:]
     B[3,indexu]=dN[2,:]
 
-    Kvve += w1*w2*J*((B'*D)*B)*parameter.my
+    Kvve += w1*w2*J*(((B'*parameter.my)*D)*B)
     #F berechnen und für links und rechts das drücken draufrechnen
     #TODO f,t in parameter struct
     Fk += ((w1*w2*J)*[0 0]*NN) + (data.n_boundary[quad,:]*parameter.boundary' .*((w1*w2*J*[1 0])*NN)')'
@@ -46,10 +46,10 @@ function assemble_element(i,data,parameter)
   end
   for (x1,w1) in quad_pairs, (x2,w2) in quad_pairs
     dN,NN = shape(x1,x2,1)
-    Kvpe += w1*w2*(B[1:2,:]'*dN)*J
+    Kvpe += -w1*w2*(B[1:2,:]'*dN)*J
     Kppe += w1*w2*dN'*dN
   end
-
+Kppe=(1/parameter.k)*Kppe
 return Kvve, Kvpe, Kppe, Fk
 end
 
@@ -102,7 +102,7 @@ function assemble_whole(data,parameter)
     for j = 1:4
           for i = 1:4
                 push!(Ipp, corner[i])
-                push!(Jpp, corner[i])
+                push!(Jpp, corner[j])
                 push!(Vpp, Kppe[i,j])
           end
     end

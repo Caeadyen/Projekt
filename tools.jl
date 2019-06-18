@@ -50,3 +50,12 @@ function gausslegendrerule(n::Integer)
   λ, V = eigen(.5 * SymTridiagonal(ones(n), 1 ./sqrt.(4 .- 1 ./ (1:(n-1)).^2)));
   return λ, V[1,:].^2
 end
+
+function plotgrid(data,parameter)
+  for i = 1:parameter.N2+1
+    plot(data.x_corner[(1+((i-1)*(parameter.N1+1))):(i*(parameter.N1+1)),1],data.x_corner[(1+((i-1)*(parameter.N1+1))):(i*(parameter.N1+1)),2],"b-")
+  end
+  for i = 1:parameter.N1+1
+    plot(data.x_corner[i:(parameter.N1+1):end,1],data.x_corner[i:(parameter.N1+1):end,2],"b-")
+  end
+end
