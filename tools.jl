@@ -39,7 +39,7 @@ struct Parameter
     N2:: Int
     boundary :: Array{Int, 2}
     f :: Array{Int, 2}
-    my :: Int
+    my :: Float64
     k :: Float16
 
 end
