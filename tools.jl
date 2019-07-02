@@ -52,10 +52,10 @@ function gausslegendrerule(n::Integer)
 end
 
 function plotgrid(data,parameter)
-  for i = 1:parameter.N2+1
-    plot(data.x_corner[(1+((i-1)*(parameter.N1+1))):(i*(parameter.N1+1)),1],data.x_corner[(1+((i-1)*(parameter.N1+1))):(i*(parameter.N1+1)),2],"b-")
+  for i = 1:2:(2*parameter.N2+1)
+    plot(data.x_node[(1+((i-1)*(4*parameter.N1+2))):4:(i*(4*parameter.N1+2)),1],data.x_node[(1+((i-1)*(4*parameter.N1+2))):4:(i*(4*parameter.N1+2)),2],"b-")
   end
-  for i = 1:parameter.N1+1
-    plot(data.x_corner[i:(parameter.N1+1):end,1],data.x_corner[i:(parameter.N1+1):end,2],"b-")
-  end
+  for i = 1:4:(4*parameter.N1+2)
+     plot(data.x_node[i:2*(4*parameter.N1+2):end,1],data.x_node[i:2*(4*parameter.N1+2):end,2],"b-")
+   end
 end
