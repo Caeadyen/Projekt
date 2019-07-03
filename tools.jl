@@ -21,11 +21,12 @@ mutable struct Data
   u :: Array{Float64}
 
   p :: Array{Float64}
+
   #Mesh(dim::Int, n_el::Int, n_nd::Int, n_corner :: Int, x_node::Array{Float64,2}, square::Array{Int64,2}, n_boundary::Array{Int64,2}, x_corner::Array{Float64, 2},corner::Array{Int64,2}, c_boundary::Array{Int64,2}) = new(dim, n_el, n_nd, n_corner,x_node, square, n_boundary, x_corner, corner, c_boundary)
 end
 
 #Data structure for in Parameter
-#L1/L2 Länge des gebiets
+#L1/L2 L�nge des gebiets
 #N1/N2 in wieviele unterteilt wird
 #Boundary grenzen [linke Seite, untere Seite, rechte Seite obere Seite]
 #f
@@ -42,13 +43,17 @@ struct Parameter
     my :: Float64
     k :: Float16
 
+    nu :: Float16
+    E :: Float64
+
+
 end
 
 
 
 function gausslegendrerule(n::Integer)
-  λ, V = eigen(.5 * SymTridiagonal(ones(n), 1 ./sqrt.(4 .- 1 ./ (1:(n-1)).^2)));
-  return λ, V[1,:].^2
+  lambda, V = eigen(.5 * SymTridiagonal(ones(n), 1 ./sqrt.(4 .- 1 ./ (1:(n-1)).^2)));
+  return lambda, V[1,:].^2
 end
 
 function plotgrid(data,parameter)

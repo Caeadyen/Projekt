@@ -11,13 +11,13 @@ function assemble_element(i,data,parameter)
   #TODO nu,E in parameter und clean up was wo berechnet wird
   #TODO J detJ J^-1 einbaun
   #D = [2 0 0; 0 2 0; 0 0 1]
-  nu=0.35
-  E=3*10^10
+  nu=parameter.nu #nu=0.35
+  E=parameter.E #E=3*10^10
   Ds=(E/(1-nu^2))*[1 nu 0;nu 1 0;0 0 (1-nu)/2]
   D=[4/3 -2/3 0;-2/3 4/3 0;0 0 1]
   G=E/(2*(1+nu))
   dt=0.1*parameter.my/G
-println(dt)
+#println(dt)
   dN=zeros(2,length(quad))
   dNdX=zeros(2,length(quad))
   B=zeros(3,length(quad))
@@ -33,6 +33,7 @@ println(dt)
     push!(indexu,2*i-1)
     push!(indexe,2*i)
   end
+
 
   for (x1,w1) in quad_pairs, (x2,w2) in quad_pairs
     dN,NN = shape(x1,x2,2)
