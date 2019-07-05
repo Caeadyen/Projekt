@@ -22,30 +22,30 @@ mutable struct Data
 
   p :: Array{Float64}
 
-  #Mesh(dim::Int, n_el::Int, n_nd::Int, n_corner :: Int, x_node::Array{Float64,2}, square::Array{Int64,2}, n_boundary::Array{Int64,2}, x_corner::Array{Float64, 2},corner::Array{Int64,2}, c_boundary::Array{Int64,2}) = new(dim, n_el, n_nd, n_corner,x_node, square, n_boundary, x_corner, corner, c_boundary)
 end
 
 #Data structure for in Parameter
 #L1/L2 L�nge des gebiets
 #N1/N2 in wieviele unterteilt wird
-#Boundary grenzen [linke Seite, untere Seite, rechte Seite obere Seite]
-#f
-#my
-#k
+#f (spaltenvektor), Volume force
+#my Viskosität
+#nu Poisson's ratio
+#E Young's modulus
+#rbounadry Speed the right bounadry moves in m/year
+#lbounadry Speed the right bounadry moves in m/year
+
 struct Parameter
 
     L1:: Int
     L2:: Int
     N1:: Int
     N2:: Int
-    boundary :: Array{Int, 2}
-    f :: Array{Int, 2}
+    f :: Array{Int, 1}
     my :: Float64
-    k :: Float16
-
     nu :: Float16
     E :: Float64
-
+    lboundary :: Float16
+    rboundary :: Float16
 
 end
 
@@ -58,9 +58,9 @@ end
 
 function plotgrid(data,parameter)
   for i = 1:2:(2*parameter.N2+1)
-    plot(data.x_node[(1+((i-1)*(4*parameter.N1+2))):4:(i*(4*parameter.N1+2)),1],data.x_node[(1+((i-1)*(4*parameter.N1+2))):4:(i*(4*parameter.N1+2)),2],"b-")
+    plot(data.x_node[(1+((i-1)*(2*parameter.N1+1))):(i*(2*parameter.N1+1)),1],data.x_node[(1+((i-1)*(2*parameter.N1+1))):(i*(2*parameter.N1+1)),2],"b-")
   end
-  for i = 1:4:(4*parameter.N1+2)
-     plot(data.x_node[i:2*(4*parameter.N1+2):end,1],data.x_node[i:2*(4*parameter.N1+2):end,2],"b-")
-   end
+  for i = 1:2:(2*parameter.N1+1)
+    plot(data.x_node[i:2*parameter.N1+1:end,1],data.x_node[i:2*parameter.N1+1:end,2],"b-")
+  end
 end
