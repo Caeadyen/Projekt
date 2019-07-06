@@ -28,6 +28,10 @@ function solvestoke(parameter)
            end
 
        end
+       #all pressure points
+       for i = data.n_nd+1:data.n_nd+data.n_corner
+           push!(inner_node,i)
+       end
        yeartime=3600*24*365.25
        FF=[F;zeros(data.n_corner)]
        K=[Kvv Kvp';Kvp spzeros(data.n_corner,data.n_corner)]
@@ -43,11 +47,11 @@ function solvestoke(parameter)
        uu[inner_node] = K[inner_node,inner_node]\FF[inner_node]
        uu[boundary_nodel] = boundary_valuel
        uu[boundary_noder] = boundary_valuer
-
         dt=3600*24*365.25 #100jahre
-        data.u[inner_node]+=uu[1:size(inner_node,1)]*parameter.dt*yeartime
+        data.u+=uu[1:data.n_nd]*parameter.dt*yeartime
         data.x_node[1:end,1]+=uu[1:Int(data.n_nd/2)]*parameter.dt*yeartime
         data.x_node[1:end,2]+=uu[Int(data.n_nd/2)+1:data.n_nd]*parameter.dt*yeartime
+        data.p=uu[data.n_nd+1:end]
 
     end
 
