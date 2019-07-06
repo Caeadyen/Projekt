@@ -33,6 +33,8 @@ end
 #E Young's modulus
 #rbounadry Speed the right bounadry moves in m/year
 #lbounadry Speed the right bounadry moves in m/year
+#dt in years
+#maxtime how many years it should run
 
 struct Parameter
 
@@ -46,6 +48,8 @@ struct Parameter
     E :: Float64
     lboundary :: Float16
     rboundary :: Float16
+    dt :: Int
+    maxtime :: Int
 
 end
 

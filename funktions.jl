@@ -2,14 +2,14 @@ using SparseArrays
 using LinearAlgebra
 include("tools.jl")
 #Building the grid
-function builddata(n1,n2)
+function builddata(Parameter)
 
-  h1=1/(2*n1)
-  h2=1/(2*n2)
+  h1=Parameter.L1/(2*Parameter.N1)
+  h2=Parameter.L2/(2*Parameter.N2)
   dim = 2
-  n_el = n1*n2
-  n_nd = ((2*n1)+1)*((2*n2)+1)
-  n_corner = (n1+1)*(n2+1)
+  n_el = Parameter.N1*Parameter.N2
+  n_nd = ((2*Parameter.N1)+1)*((2*Parameter.N2)+1)
+  n_corner = (Parameter.N1+1)*(Parameter.N2+1)
   n_boundary = zeros(Int,n_nd*2,4)
   x_node = zeros(Float64,n_nd,2)
   c_boundary = zeros(Int,n_corner,4)
@@ -18,9 +18,9 @@ function builddata(n1,n2)
   corner = zeros(Int,n_el,4)
   n_count = 1
 
-for j = 1:((2*n2)+1)
+for j = 1:((2*Parameter.N2)+1)
   yj = (j-1)*h2
-  for i = 1:((2*n1)+1)
+  for i = 1:((2*Parameter.N1)+1)
     xi = (i-1)*h1
     #festlegen der Boundary: linker Rand= 1; unterer =2; rechter = 3; oberer = 4
     x_node[n_count,1] = xi
@@ -31,7 +31,7 @@ for j = 1:((2*n2)+1)
       n_boundary[n_count,2] = 1
       n_boundary[n_count+n_nd,2] = 1
     end
-    if(j==(2*n2)+1)
+    if(j==(2*Parameter.N2)+1)
       n_boundary[n_count,4] = 1
       n_boundary[n_count+n_nd,4] = 1
     end
@@ -39,7 +39,7 @@ for j = 1:((2*n2)+1)
         n_boundary[n_count,1] = 1
         n_boundary[n_count+n_nd,1] = 1
       end
-    if(i==(2*n1)+1)
+    if(i==(2*Parameter.N1)+1)
         n_boundary[n_count,3] = 1
         n_boundary[n_count+n_nd,3] = 1
     end
@@ -53,34 +53,34 @@ end
 
 e_count = 0
 
-for j = 2:2:2*n2
-  for i = 1:n1
+for j = 2:2:2*Parameter.N2
+  for i = 1:Parameter.N1
     e_count += 1
-    square[e_count,1] = (j-2)* (2*n1+1) + (2*i)-1
+    square[e_count,1] = (j-2)* (2*Parameter.N1+1) + (2*i)-1
     square[e_count,10] = square[e_count,1]+n_nd
 
-    square[e_count,2] = (j-2)*(2*n1+1) + (2*i)+1
+    square[e_count,2] = (j-2)*(2*Parameter.N1+1) + (2*i)+1
     square[e_count,11] = square[e_count,2]+n_nd
 
-    square[e_count,3] = (j)*(2*n1+1) + (2*i)+1
+    square[e_count,3] = (j)*(2*Parameter.N1+1) + (2*i)+1
     square[e_count,12] = square[e_count,3]+n_nd
 
-    square[e_count,4] = (j)*(2*n1+1) + (2*i)-1
+    square[e_count,4] = (j)*(2*Parameter.N1+1) + (2*i)-1
     square[e_count,13] = square[e_count,4]+n_nd
 
-    square[e_count,5] = (j-2)* (2*n1+1) + (2*i)
+    square[e_count,5] = (j-2)* (2*Parameter.N1+1) + (2*i)
     square[e_count,14] = square[e_count,5]+n_nd
 
-    square[e_count,6] = (j-1)* (2*n1+1) + (2*i)+1
+    square[e_count,6] = (j-1)* (2*Parameter.N1+1) + (2*i)+1
     square[e_count,15] = square[e_count,6]+n_nd
 
-    square[e_count,7] = (j)* (2*n1+1) + (2*i)
+    square[e_count,7] = (j)* (2*Parameter.N1+1) + (2*i)
     square[e_count,16] = square[e_count,7]+n_nd
 
-    square[e_count,8] = (j-1)* (2*n1+1) + (2*i)-1
+    square[e_count,8] = (j-1)* (2*Parameter.N1+1) + (2*i)-1
     square[e_count,17] = square[e_count,8]+n_nd
 
-    square[e_count,9] = (j-1)* (2*n1+1) + (2*i)
+    square[e_count,9] = (j-1)* (2*Parameter.N1+1) + (2*i)
     square[e_count,18] = square[e_count,9]+n_nd
 
     end
@@ -88,22 +88,22 @@ end
 
 #corner grid
 n_count = 1
-for j = 1:(n2+1)
+for j = 1:(Parameter.N2+1)
 
-  for i = 1:(n1+1)
+  for i = 1:(Parameter.N1+1)
 
     #festlegen der Boundary: linker Rand= 1; unterer =2; rechter = 3; oberer = 4
 
   if(i == 1)
       c_boundary[n_count,1] = 1
   end
-    if(i==(n1+1))
+    if(i==(Parameter.N1+1))
       c_boundary[n_count,3] = 1
     end
     if(j==1)
       c_boundary[n_count,2] = 1
     end
-    if(j==(n2+1))
+    if(j==(Parameter.N2+1))
       c_boundary[n_count,4] = 1
     end
 
@@ -113,13 +113,13 @@ for j = 1:(n2+1)
   end
 end
 e_count = 0
-for j = 1:n2
-  for i = 1:n1
+for j = 1:Parameter.N2
+  for i = 1:Parameter.N1
     e_count += 1
-    corner[e_count,1] = (j-1)* (n1+1) + i
-    corner[e_count,2] = (j-1)* (n1+1) + (i + 1)
-    corner[e_count,3] = (j)*(n1+1) + (i+1)
-    corner[e_count,4] = (j)*(n1+1) + i
+    corner[e_count,1] = (j-1)* (Parameter.N1+1) + i
+    corner[e_count,2] = (j-1)* (Parameter.N1+1) + (i + 1)
+    corner[e_count,3] = (j)*(Parameter.N1+1) + (i+1)
+    corner[e_count,4] = (j)*(Parameter.N1+1) + i
 
     end
 end

@@ -4,9 +4,9 @@ include("tools.jl")
 include("solver.jl")
 function solvestoke(parameter)
 
-    data = builddata(parameter.N1,parameter.N2)
+    data = builddata(parameter)
 
-    for j=1:10
+    for j=1:parameter.dt:parameter.maxtime
     #Zusammensetzen des Gleichungsystem, dabei wird ignoriert das der Rand 0 ist
         Kvv, Kvp, F = assemble_whole(data ,parameter)
 
@@ -45,9 +45,9 @@ function solvestoke(parameter)
        uu[boundary_noder] = boundary_valuer
 
         dt=3600*24*365.25 #100jahre
-        data.u[inner_node]=uu[1:size(inner_node,1)]*dt
-        data.x_node[1:end,1]+=data.u[1:Int(data.n_nd/2)]
-        data.x_node[1:end,2]+=data.u[Int(data.n_nd/2)+1:end]
+        data.u[inner_node]+=uu[1:size(inner_node,1)]*parameter.dt*yeartime
+        data.x_node[1:end,1]+=uu[1:Int(data.n_nd/2)]*parameter.dt*yeartime
+        data.x_node[1:end,2]+=uu[Int(data.n_nd/2)+1:data.n_nd]*parameter.dt*yeartime
 
     end
 

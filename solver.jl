@@ -16,7 +16,7 @@ function assemble_element(i,data,parameter)
   D=[4/3 -2/3 0;-2/3 4/3 0;0 0 1]
 
   G=1e11
-  dt=3600*24*365.25 #100jahre
+  dt=3600*24*365.25*parameter.dt #100jahre
   dN=zeros(2,length(quad))
   dNdX=zeros(2,length(quad))
   B=zeros(3,length(quad))
