@@ -27,21 +27,22 @@ for j = 1:((2*Parameter.N2)+1)
     #x_node[n_count+1,1] = xi
     x_node[n_count,2] = yj
     #x_node[n_count+1,2] = yj
-    if(j==1)
-      n_boundary[n_count,2] = 1
-      n_boundary[n_count+n_nd,2] = 1
-    end
-    if(j==(2*Parameter.N2)+1)
-      n_boundary[n_count,4] = 1
-      n_boundary[n_count+n_nd,4] = 1
-    end
+
     if(i == 1)
         n_boundary[n_count,1] = 1
         n_boundary[n_count+n_nd,1] = 1
-      end
-    if(i==(2*Parameter.N1)+1)
+      #end
+    elseif(i==(2*Parameter.N1)+1)
         n_boundary[n_count,3] = 1
         n_boundary[n_count+n_nd,3] = 1
+    # elseif(j==1)
+    #       n_boundary[n_count,2] = 1
+    #       n_boundary[n_count+n_nd,2] = 1
+    #     #end
+    # elseif(j==(2*Parameter.N2)+1)
+    #       n_boundary[n_count,4] = 1
+    #       n_boundary[n_count+n_nd,4] = 1
+        #end
     end
 
     n_count += 1

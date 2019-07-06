@@ -20,10 +20,12 @@ function solvestoke(parameter)
 
                push!(inner_node,j)
            else
-               if(data.n_boundary[j,1]==1)
-                   push!(boundary_nodel,j)
-               else
-                   push!(boundary_noder,j)
+               if(j<=Int(data.n_nd/2))
+                   if(data.n_boundary[j,1]==1)
+                       push!(boundary_nodel,j)
+                   else
+                       push!(boundary_noder,j)
+                   end
                end
            end
 
@@ -32,6 +34,7 @@ function solvestoke(parameter)
        for i = data.n_nd+1:data.n_nd+data.n_corner
            push!(inner_node,i)
        end
+
        yeartime=3600*24*365.25
        FF=[F;zeros(data.n_corner)]
        K=[Kvv Kvp';Kvp spzeros(data.n_corner,data.n_corner)]
