@@ -28,7 +28,9 @@ end
 #L1/L2 L�nge des gebiets
 #N1/N2 in wieviele unterteilt wird
 #f (spaltenvektor), Volume force
-#my Viskosität
+#sub Anzahl in die das Gebiet in y-Richtung unterteilt werden soll, N2 muss durch diese Zahl teilbar sein
+
+#my (spaltenvektor), Viskosität
 #nu Poisson's ratio
 #E Young's modulus
 #rbounadry Speed the right bounadry moves in m/year
@@ -43,7 +45,8 @@ struct Parameter
     N1:: Int
     N2:: Int
     f :: Array{Int, 1}
-    my :: Float64
+    sub :: Int
+    my :: Array{Float64, 1}
     nu :: Float16
     E :: Float64
     lboundary :: Float16

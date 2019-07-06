@@ -1,6 +1,7 @@
 #assemble Steifigkeitsmatrix und Lastvektor fuer ein finites Element
 function assemble_element(i,data,parameter)
   quad = data.square[i,:]
+  #print(quad)
   corner = data.corner[i,:]
   points, weights = gausslegendrerule(3)
   quad_pairs = zip(points,weights)
@@ -12,6 +13,7 @@ function assemble_element(i,data,parameter)
 
   nu=parameter.nu
   E=parameter.E
+  #println("Bis hier passts")
   Ds=(E/(1-nu^2))*[1 nu 0;nu 1 0;0 0 (1-nu)/2]
   D=[4/3 -2/3 0;-2/3 4/3 0;0 0 1]
 
@@ -40,8 +42,8 @@ function assemble_element(i,data,parameter)
     detJ=jac[1,1]*jac[2,2]-jac[1,2]*jac[2,1]
     invj=inv(jac)
     dNdX=dN'*invj
-    mu=1/((1/parameter.my)+(1/(G*dt)))
-    chi =1/(1+(G*dt/parameter.my))
+    #mu=1/((1/parameter.my)+(1/(G*dt)))
+    #chi =1/(1+(G*dt/parameter.my))
     B[2,10:18]=dNdX[:,2]
     B[3,1:9]=dNdX[:,2]
     B[1,1:9]=dNdX[:,1]
@@ -54,10 +56,31 @@ function assemble_element(i,data,parameter)
 
     #W= [0 0 2; 0 0 -2; -1 1 0]*Bw*data.u[quad]*dt
 
-    Kvve += w1*w2*detJ*mu*((B'*D)*B)
-    Kvpe += -w1*w2*(Bvol'*NN2)*detJ
-    Fv=w1*w2*detJ*t*dNdX'*chi
-    Ft += ((w1*w2*detJ)*parameter.f*(NN[1,:]'.*NN[2,:]')) -Fv
+    # Kvve += w1*w2*detJ*mu*((B'*D)*B)
+    # Kvpe += -w1*w2*(Bvol'*NN2)*detJ
+    # Fv=w1*w2*detJ*t*dNdX'*chi
+    # Ft += ((w1*w2*detJ)*parameter.f*(NN[1,:]'.*NN[2,:]')) -Fv
+
+    for j = 1:parameter.sub
+        mu=1/((1/parameter.my[j])+(1/(G*dt)))
+        chi =1/(1+(G*dt/parameter.my[j]))
+        if((((i-1)÷parameter.N1)+1) == j)   # Jeder Schicht wird das richtig my zugewiesen, d.h. den unteren N1 Elementen das erste my, den darüberliegenden N1 Elemente das zweite my usw.
+            Kvve += w1*w2*detJ*mu*((B'*D)*B)
+            Kvpe += -w1*w2*(Bvol'*NN2)*detJ
+            Fv=w1*w2*detJ*t*dNdX'*chi
+            Ft += ((w1*w2*detJ)*parameter.f*(NN[1,:]'.*NN[2,:]')) -Fv
+            #println(mu)
+        # else
+        #     mu=1/((1/parameter.my[2])+(1/(G*dt)))
+        #     chi =1/(1+(G*dt/parameter.my[2]))
+        #     Kvve += w1*w2*detJ*mu*((B'*D)*B)
+        #     Kvpe += -w1*w2*(Bvol'*NN2)*detJ
+        #     Fv=w1*w2*detJ*t*dNdX'*chi
+        #     Ft += ((w1*w2*detJ)*parameter.f*(NN[1,:]'.*NN[2,:]')) -Fv
+        #     println(mu)
+        end
+end
+
 
   end
 
@@ -79,11 +102,11 @@ function assemble_whole(data,parameter)
   Ivp=Int64[]
   Jvp=Int64[]
   Vvp=Float64[]
-
   for i = 1:data.n_el
 
     Fk =zeros(1,18)
     Kvve, Kvpe , Fk = assemble_element(i,data,parameter)
+
     quad = data.square[i,:]
     corner = data.corner[i,:]
     F[quad]=F[quad]+Fk
