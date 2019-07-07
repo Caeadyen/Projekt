@@ -1,4 +1,5 @@
 using PyPlot
+using LinearAlgebra
 include("funktions.jl")
 include("tools.jl")
 include("solver.jl")
@@ -45,7 +46,6 @@ function solvestoke(parameter)
        FF=FF-K[:,boundary_nodel]*boundary_valuel;
        FF=FF-K[:,boundary_noder]*boundary_valuer;
        uu=zeros(data.n_nd+data.n_corner)
-
        #solving the system
        uu[inner_node] = K[inner_node,inner_node]\FF[inner_node]
        uu[boundary_nodel] = boundary_valuel
