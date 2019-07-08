@@ -77,7 +77,7 @@ end
 function plotpressure(data,parameter)
   x_node=Int64[]
 
-  for i = (2*parameter.N2+1):-2:1
+  for i = 1:2:(2*parameter.N2+1)
       for j=1+((i-1)*(2*parameter.N1+1)):2:(i*(2*parameter.N1+1))
       push!(x_node,j)
     end
@@ -85,7 +85,9 @@ function plotpressure(data,parameter)
 
   X = reshape(data.x_node[x_node,1], parameter.N1+1,parameter.N2+1)'
   Y = reshape(data.x_node[x_node,2], parameter.N1+1,parameter.N2+1)'
-  p=reshape(data.p',parameter.N1+1,parameter.N2+1)'* 1e-9
+  p=reshape(data.p',parameter.N1+1,parameter.N2+1)'*1e-9
+
+
   contourf(X,Y,p)
   colorbar()
 
