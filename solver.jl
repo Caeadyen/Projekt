@@ -28,13 +28,16 @@ function assemble_element(i,data,parameter)
   indexe=Int64[]
 
 
+
   for i = 1:convert(Int,(length(quad)/2))
     push!(indexu,2*i-1)
     push!(indexe,2*i)
   end
 
-
+ count = 1
+ count_tau = 1
   for (x1,w1) in quad_pairs, (x2,w2) in quad_pairs
+
     dN,NN = shape(x1,x2,2)
     dN2,NN2 = shape(x1,x2,1)
     jac=data.x_node[quad[1:9],:]'*dN'
@@ -49,6 +52,11 @@ function assemble_element(i,data,parameter)
     B[3,10:18]=dNdX[:,1]
 
     tau=Ds*B*(data.u[quad])
+    #println(x1,x2)
+    if(count == 1 || count == 3 || count == 7 || count == 9)
+        data.tau[:,count_tau, i] = tau
+        count_tau += 1
+    end
     t=[tau[1] tau[3];tau[3] tau[2]]
     Bvol[1,1:9]=dNdX[:,1]
     Bvol[1,10:18]=dNdX[:,2]
@@ -81,6 +89,7 @@ function assemble_element(i,data,parameter)
         #     Fv=w1*w2*detJ*t*dNdX'*chi
         #     Ft += ((w1*w2*detJ)*parameter.f*(NN[1,:]'.*NN[2,:]')) -Fv
         #     println(mu)
+        count += 1
         end
 end
 
