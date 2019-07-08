@@ -69,12 +69,17 @@
 \section{Einleitung}
 \begin{frame}
 \frametitle{Rheologie}
+ \begin{columns}
+	\column{0.5\linewidth}
 \begin{itemize}
 	\item Viskose Rheologie bei Modellierung der Dynamik vom heißem, konvektierenden Inneren der Erde
 	\item Modellierung relativ kalter, elastischer Lithosphäre erfordert viskoelastische Rheologie
 	\item heißes sublithosphärische Innere verhält sich wie viskoses Fluid
 	\item Lithosphäre zeigt elastisches Verhalten  
 \end{itemize}
+\column{0.5\linewidth}
+\includegraphics[scale=0.3]{585px-Earth_cutaway_schematic-en.png}
+\end{columns}
 	
 \end{frame}
 	
@@ -125,17 +130,20 @@ Nach Entlastung:
 
 \begin{frame}
 	\frametitle{Stokes Gleichungen für inkompressiblen Fluss}
+	\begin{small}
 		\begin{align*}
-			&\int_{\Omega} B^T \frac{2\mu \Delta t}{\Delta T + De\mu} D' B \bar{v}^{(k+1)} d\Omega -  \int_{\Omega} B^T_{vol} H \bar{p}^{(k+1)} d\Omega \\ 
-			&-f  = -\int_{\Omega} B^T \frac{De\mu}{\Delta T + De\mu}(I+W)\tau^{*n}
+			&\int_{\Omega} B^T \frac{2\mu \Delta t}{\Delta t + De\mu} D' B \bar{v}^{(k+1)} d\Omega -  \int_{\Omega} B^T_{vol} H \bar{p}^{(k+1)} d\Omega \\ 
+			&-f  = -\int_{\Omega} B^T \frac{De\mu}{\Delta t + De\mu}(I+W)\tau^{*n}
 		\end{align*}
 		\begin{align*}
 			\int_{\Omega} H^T B_{vol}  \bar{v}^{(k+1)} d\Omega = g
 		\end{align*}
+		
 	$B, B_{vol}$: Ableitungen der Shapefunktionen \\
-	$f, g$: externe Kraft und Randbedingungen
+	$f, g$: externe Kraft und Randbedingungen \\
 	$N,H$: Shapefunktionen\\
 	$D'$: Rheologiematrix \\
+	$De$: Deborah-Zahl \\
 	$W$: Jaumann Stress-Rotations-Matrix, mit 
 	\begin{align*}
 		W = 	\begin{bmatrix}
@@ -145,6 +153,7 @@ Nach Entlastung:
 				\end{bmatrix}
 				B_{\omega} v \Delta t
 	\end{align*}
+	\end{small}
 \end{frame}
 
 \begin{frame}
@@ -183,7 +192,21 @@ $K_{pv} = K_{pv}^T$
 	$G$: Schermodul \\
 	$\frac{D}{Dt}$: Objektive Zeitableitung
 \end{frame}
-
+\section{Ergebnisse}
+\begin{frame}
+	Viskoelastischen Würfel 
+	\begin{columns}
+		\column{0.5\linewidth}
+		\begin{itemize}
+			\item $\Omega = (0,1)^2$
+			\item an  zwei gegenüberliegenden Seiten zusammengedrückt
+			\item homogene Viskosität 
+		\end{itemize}
+	
+		\column{0.5\linewidth}
+		
+	\end{columns}
+\end{frame}
 
 
 \end{document}
