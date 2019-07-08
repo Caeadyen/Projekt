@@ -93,10 +93,10 @@ function plotpressure(data,parameter)
 
 end
 
-function plottau_xx(data,parameter,tau)
+function plottau(data,parameter,tau)
   x_node=Int64[]
 
-  for i = (2*parameter.N2+1):-2:1
+  for i = 1:2:(2*parameter.N2+1)
       for j=1+((i-1)*(2*parameter.N1+1)):2:(i*(2*parameter.N1+1))
       push!(x_node,j)
     end
