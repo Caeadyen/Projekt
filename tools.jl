@@ -73,3 +73,20 @@ function plotgrid(data,parameter)
     plot(data.x_node[i:2*parameter.N1+1:end,1],data.x_node[i:2*parameter.N1+1:end,2],"b-")
   end
 end
+
+function plotpressure(data,parameter)
+  x_node=Int64[]
+
+  for i = (2*parameter.N2+1):-2:1
+      for j=1+((i-1)*(2*parameter.N1+1)):2:(i*(2*parameter.N1+1))
+      push!(x_node,j)
+    end
+  end
+
+  X = reshape(data.x_node[x_node,1], parameter.N1+1,parameter.N2+1)'
+  Y = reshape(data.x_node[x_node,2], parameter.N1+1,parameter.N2+1)'
+  p=reshape(data.p',parameter.N1+1,parameter.N2+1)'* 1e-9
+  contourf(X,Y,p)
+  colorbar()
+
+end
