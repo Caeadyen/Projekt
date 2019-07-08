@@ -22,6 +22,8 @@ mutable struct Data
 
   p :: Array{Float64}
 
+  tau :: Array{Float64, 3}
+
 end
 
 #Data structure for in Parameter

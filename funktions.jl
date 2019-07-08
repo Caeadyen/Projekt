@@ -126,7 +126,8 @@ for j = 1:Parameter.N2
 end
 #u = zeros(2*data.n_nd)
 #  p = zeros(data.n_corner)
-data = Data(dim, n_el, n_nd*2, n_corner, x_node, square, n_boundary, x_corner, corner, c_boundary,zeros(2*n_nd),zeros(n_corner))
+tau = zeros(3, 4, n_el)
+data = Data(dim, n_el, n_nd*2, n_corner, x_node, square, n_boundary, x_corner, corner, c_boundary,zeros(2*n_nd),zeros(n_corner), tau)
 return data
 end
 
