@@ -2,11 +2,19 @@
 Modellierungspraktikum: Viskoelastizität
 working setup:
 
-para= Parameter(1,1,10,10,[0; 0], 1e20 , 0.3 , 3e10, 1e-3,-1e-3,1,10);
-data = solvestoke(para);
-plotgrid(data,para);
-quiver(data.x_node[:,1],data.x_node[:,2],data.u[1:441],data.u[442:end]);
+Einheitswürfel zusammengedrückt
+20x20 Gitter, 1 Jahr zeitschritt, 10 jahre Gesammt
+
+my = [1e20];
+para= Parameter(1,1,20,20,[0; 0], 1, my , 0.25 , 3e10, 1e10, 0.01,-0.01,1,10);
+data = builddata(para);
+data = solvestoke(data,para);
 
 
-my = [1e21; 1e20; 1e23; 1e17; 1e10; 1e15; 1e17; 1e12; 1e10; 1e20]
-para= Parameter(1,1,10,10,[0; 0], 10, my , 0.3 , 3e10, 1e-3,-1e-3,1,10);
+
+beliebiges Gebiet mit verschiedenen Viskositäten:
+100x50 gebiet, 50x25 Gitter, 5 verschiedene Viskositäten, 10 Jahre schritte, 2000 Jahre gesamt
+my = [1e23; 1e20; 1e15; 1e17; 1e20] ;
+para= Parameter(100,50,50,25,[0; 0], 5, my , 0.25 , 3e10, 1e10, 0.001,-0.001,10,2000);
+data = builddata(para);
+data = solvestoke(data,para);

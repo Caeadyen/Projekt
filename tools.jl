@@ -40,6 +40,7 @@ end
 #dt in years
 #maxtime how many years it should run
 
+
 struct Parameter
 
     L1:: Int
@@ -51,6 +52,7 @@ struct Parameter
     my :: Array{Float64, 1}
     nu :: Float16
     E :: Float64
+    G :: Float16
     lboundary :: Float16
     rboundary :: Float16
     dt :: Int
@@ -68,6 +70,8 @@ end
 function plotgrid(data,parameter)
   for i = 1:2:(2*parameter.N2+1)
     plot(data.x_node[(1+((i-1)*(2*parameter.N1+1))):(i*(2*parameter.N1+1)),1],data.x_node[(1+((i-1)*(2*parameter.N1+1))):(i*(2*parameter.N1+1)),2],"b-")
+    # println(data.x_node[(1+((i-1)*(2*parameter.N1+1))):(i*(2*parameter.N1+1)),1])
+    # println(data.x_node[(1+((i-1)*(2*parameter.N1+1))):(i*(2*parameter.N1+1)),2])
   end
   for i = 1:2:(2*parameter.N1+1)
     plot(data.x_node[i:2*parameter.N1+1:end,1],data.x_node[i:2*parameter.N1+1:end,2],"b-")
@@ -93,7 +97,7 @@ function plotpressure(data,parameter)
 
 end
 
-function plottau(data,parameter,tau)
+function plottau(data,parameter,tau,option)
   x_node=Int64[]
 
   for i = 1:2:(2*parameter.N2+1)
@@ -101,12 +105,38 @@ function plottau(data,parameter,tau)
       push!(x_node,j)
     end
   end
+  if(option=="tau2nd")
+      sigm=1e-9*(0.5*tau[1].^2+0.5*tau[2].^2+tau[3]).^0.5
+      X = reshape(data.x_node[x_node,1], parameter.N1+1,parameter.N2+1)'
+      Y = reshape(data.x_node[x_node,2], parameter.N1+1,parameter.N2+1)'
+      sigm=reshape(sigm,parameter.N1+1,parameter.N2+1)'
+      contourf(X,Y,sigm, norm=matplotlib.colors.LogNorm())
+      colorbar()
+    elseif(option=="tauxx")
+        sigm = tau[1]
+        X = reshape(data.x_node[x_node,1], parameter.N1+1,parameter.N2+1)'
+        Y = reshape(data.x_node[x_node,2], parameter.N1+1,parameter.N2+1)'
+        sigm=reshape(sigm,parameter.N1+1,parameter.N2+1)'
+        contourf(X,Y,sigm)
+        colorbar()
+    elseif(option=="tauyy")
+        sigm = tau[2]
+        X = reshape(data.x_node[x_node,1], parameter.N1+1,parameter.N2+1)'
+        Y = reshape(data.x_node[x_node,2], parameter.N1+1,parameter.N2+1)'
+        sigm=reshape(sigm,parameter.N1+1,parameter.N2+1)'
+        contourf(X,Y,sigm)
+        colorbar()
+    elseif(option=="tauxy")
+        sigm = tau[3]
+        X = reshape(data.x_node[x_node,1], parameter.N1+1,parameter.N2+1)'
+        Y = reshape(data.x_node[x_node,2], parameter.N1+1,parameter.N2+1)'
+        sigm=reshape(sigm,parameter.N1+1,parameter.N2+1)'
+        contourf(X,Y,sigm)
+        colorbar()
+    else
+        println("Kannt ", option, " nicht printen")
+    end
 
-  X = reshape(data.x_node[x_node,1], parameter.N1+1,parameter.N2+1)'
-  Y = reshape(data.x_node[x_node,2], parameter.N1+1,parameter.N2+1)'
-  sigm=reshape(tau,parameter.N1+1,parameter.N2+1)'* 1e-9
-  contourf(X,Y,sigm)
-  colorbar()
 
 end
 
@@ -114,24 +144,26 @@ function  convert_tau(data,parameter)
     tau_xx = zeros(1, (parameter.N1+1)*(parameter.N2+1))
     tau_xy = zeros(1, (parameter.N1+1)*(parameter.N2+1))
     tau_yy = zeros(1, (parameter.N1+1)*(parameter.N2+1))
-    for i=1:data.n_el
+    for j=1:parameter.N2
+        for i=1:parameter.N1
         # punkt 1
-        tau_xx[i] += data.tau[1,1,i]
-        tau_xy[i] += data.tau[3,1,i]
-        tau_yy[i] += data.tau[2,1,i]
+        tau_xx[(parameter.N1+1)*(j-1)+i] += data.tau[1,1,parameter.N1*(j-1)+i]
+        tau_xy[(parameter.N1+1)*(j-1)+i] += data.tau[3,1,parameter.N1*(j-1)+i]
+        tau_yy[(parameter.N1+1)*(j-1)+i] += data.tau[2,1,parameter.N1*(j-1)+i]
         # punkt 3
-        tau_xx[i+parameter.N1] += data.tau[1,3,i]
-        tau_xy[i+parameter.N1] += data.tau[3,3,i]
-        tau_yy[i+parameter.N1] += data.tau[2,3,i]
+        tau_xx[(parameter.N1+1)*(j-1)+i+parameter.N1+1] += data.tau[1,2,parameter.N1*(j-1)+i]
+        tau_xy[(parameter.N1+1)*(j-1)+i+parameter.N1+1] += data.tau[3,2,parameter.N1*(j-1)+i]
+        tau_yy[(parameter.N1+1)*(j-1)+i+parameter.N1+1] += data.tau[2,2,parameter.N1*(j-1)+i]
         # punkt 7
-        tau_xx[i+1] += data.tau[1,2,i]
-        tau_xy[i+1] += data.tau[3,2,i]
-        tau_yy[i+1] += data.tau[2,2,i]
+        tau_xx[(parameter.N1+1)*(j-1)+i+1] += data.tau[1,3,parameter.N1*(j-1)+i]
+        tau_xy[(parameter.N1+1)*(j-1)+i+1] += data.tau[3,3,parameter.N1*(j-1)+i]
+        tau_yy[(parameter.N1+1)*(j-1)+i+1] += data.tau[2,3,parameter.N1*(j-1)+i]
         # punkt 9
-        tau_xx[i+parameter.N1+1] += data.tau[1,4,i]
-        tau_xy[i+parameter.N1+1] += data.tau[3,4,i]
-        tau_yy[i+parameter.N1+1] += data.tau[2,4,i]
+        tau_xx[(parameter.N1+1)*(j-1)+i+parameter.N1+2] += data.tau[1,4,parameter.N1*(j-1)+i]
+        tau_xy[(parameter.N1+1)*(j-1)+i+parameter.N1+2] += data.tau[3,4,parameter.N1*(j-1)+i]
+        tau_yy[(parameter.N1+1)*(j-1)+i+parameter.N1+2] += data.tau[2,4,parameter.N1*(j-1)+i]
     end
+end
 
     debug_c1 = 0
     debug_c2 = 0
@@ -156,6 +188,5 @@ function  convert_tau(data,parameter)
             debug_c3 += 1
         end
     end
-    println(debug_c1," ", debug_c2," ", debug_c3," ")
     return tau_xx,tau_xy,tau_yy
 end
